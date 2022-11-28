@@ -20,6 +20,21 @@ beforeEach(async () => {
 
 const server = supertest(app);
 describe("GET /hotels", () => {
+  it("should respond with status 401 if no token is given ", async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const enrollment = await createEnrollmentWithAddress(user);
+    const ticketType = await createTicketType();
+    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+    const hotels = await createHotels();
+    const room = await createRoom(hotels.id);
+    const body={
+      idTicket: ticket.id
+    };
+    const response = await server.get("/hotels").send(body);
+    
+    expect(response.status).toBe(401);
+  });
   it("should respond with status 400 if there is no paid or remote ", async () => {
     const user = await createUser();
     const token = await generateValidToken(user);
@@ -89,6 +104,22 @@ describe("GET /hotels", () => {
   });
 });
 describe("GET /hotels/:hotelId", () => {
+  it("should respond with status 401 if no token is given ", async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const enrollment = await createEnrollmentWithAddress(user);
+    const ticketType = await createTicketTypeRemoteFalse();
+    const hotels = await createHotels();
+    const room = await createRoom(hotels.id);
+    const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    const body={
+      id: ticket.id
+    };
+    const response = await server.get(`/hotels/${room.hotelId}`).send(body);
+    
+    expect(response.status).toBe(401);
+  });
+    
   it("should respond with status 200 and rooms", async () => {
     const user = await createUser();
     const token = await generateValidToken(user);

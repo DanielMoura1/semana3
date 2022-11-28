@@ -5,6 +5,7 @@ import { Gethotels } from "@/schemas";
 const hotelsRouter = Router();
 
 hotelsRouter 
+  .all("/*", authenticateToken)
   .get("/", validateBody(Gethotels), gethotels )
   .get("/:hotelId", getRoom);
 export { hotelsRouter  };

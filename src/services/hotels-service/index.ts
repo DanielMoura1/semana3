@@ -9,12 +9,10 @@ async function ticket(idTicket: number) {
   return res;
 }
 async function GetHotels() {
-  const a =await hotelsRepository.Hotels();
-  return a;
+  return await hotelsRepository.Hotels();
 }
 async function getRoom(id: number) {
-  const a =await hotelsRepository.get(id);
-  return a;
+  return await hotelsRepository.get(id);
 }
 const hotelsService = {
   ticket, GetHotels, getRoom
